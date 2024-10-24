@@ -1,0 +1,3 @@
+copy bin\Debug\net6.0\TimeRate.dll C:\Users\羽学\Desktop\Beta\ServerPlugins
+del C:\Users\羽学\Desktop\Beta\tshock\时间加速.json
+taskkill /F /IM TShock.Server.exe
