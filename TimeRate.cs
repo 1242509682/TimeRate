@@ -12,7 +12,7 @@ namespace TimeRate
         #region 插件信息
         public override string Name => "时间加速";
         public override string Author => "羽学";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 2, 0);
         public override string Description => "涡轮增压不蒸鸭";
         #endregion
 
@@ -55,30 +55,24 @@ namespace TimeRate
 
             // 获取所有在线玩家
             var plr = TShock.Players.Where(plr => plr != null && plr.Active && plr.IsLoggedIn);
+            var plrCount = plr.Count();
+
             //是否全部玩家睡觉
             var all = plr.All(plr => plr.TPlayer.sleeping.isSleeping);
             //是否任意1人睡觉
             var one = plr.Any(plr => plr.TPlayer.sleeping.isSleeping);
 
             //用标识决定是否发包优化时间流逝视觉
-            bool Update = false;
+            var Update = false;
 
-            if (Config.Enabled || (all && Config.All) || (one && Config.One))
+            if (plrCount > 0 &&( Config.Enabled || (all && Config.All) || (one && Config.One)) || plrCount == 0)
             {
-                // 设置时间加速
-                if (Terraria.Main.dayRate != Config.UpdateRate)
+                var Rate = plrCount > 0 && (Config.Enabled || (all && Config.All) || (one && Config.One)) ? Config.UpdateRate : 1;
+
+                if (Terraria.Main.dayRate != Rate)
                 {
                     Update = true;
-                    Terraria.Main.dayRate = Config.UpdateRate;
-                }
-            }
-
-            else // 设置默认时间速率
-            {
-                if (Terraria.Main.dayRate != 1)
-                {
-                    Update = true;
-                    Terraria.Main.dayRate = 1;
+                    Terraria.Main.dayRate = Rate;
                 }
             }
 
